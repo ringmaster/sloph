@@ -124,7 +124,7 @@ try {
         <?foreach($latest_posts as $resource):?>
           <? include 'views/article.php'; ?>
         <?endforeach?>
-        <nav id="prevnav"><p><a href="<?=$next?>" id="prev" rel="prev">Prev</a></p></nav>
+        <nav id="nav"><p><a href="<?=$next?>" id="prev" rel="prev">earlier</a></p></nav>
       </div>
       <div class="w1of2">
         <p>IRL I am <span property="as:name foaf:name">Amy</span></p>
@@ -152,7 +152,7 @@ try {
         var posts = document.getElementById("latest");
         var prevLink = document.getElementById("prev");
         var prevUri = prevLink.href;
-        prevLink.onclick = function(e) { e.preventDefault(); makeRequest('vendor/sloph/page.php?start='+prevUri); };
+        prevLink.onclick = function(e) { e.preventDefault(); makeRequest('vendor/sloph/page.php?type=as:Article,as:Note&start='+prevUri); };
 
         function makeRequest(url) {
           httpRequest = new XMLHttpRequest();
@@ -163,20 +163,22 @@ try {
           }
           httpRequest.onreadystatechange = alertContents;
           httpRequest.open('GET', url);
+          httpRequest.setRequestHeader('Accept', 'text/html');
           httpRequest.send();
         }
 
         function alertContents() {
           if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
-              var prevNav = document.getElementById("prevnav");
-              var newNav = prevNav.cloneNode(true);
-              var res = JSON.parse(httpRequest.responseText);
-              prevNav.parentNode.removeChild(prevNav);
-              newNav.querySelector("#prev").href = res.prev;
-              posts.insertAdjacentHTML('beforeEnd', res.html);
-              posts.appendChild(newNav);
-              newNav.querySelector("#prev").onclick = function(e) { e.preventDefault(); makeRequest('vendor/sloph/page.php?start='+res.prev); };
+              var nav = document.getElementById("nav");
+              var res = httpRequest.responseText;
+              nav.parentNode.removeChild(nav);
+              posts.insertAdjacentHTML('beforeEnd', res);
+              var nextnav = posts.querySelector("#next");
+              nextnav.onclick = function(e) { 
+                e.preventDefault(); 
+                makeRequest('vendor/sloph/page.php?type=as:Article,as:Note&start='+nextnav.href); 
+              };
             } else {
               console.log('There was a problem with the request.');
             }

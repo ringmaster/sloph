@@ -66,7 +66,7 @@ function in_add($resource, $add){
 /* Add to Acquire posts */
 
 if(!isset($_GET['month'])){
-  $_GET['month'] = "june";
+  $_GET['month'] = strtolower($now->format("F"));
 }
 $mn = new DateTime("00:00:00 1st ".$_GET['month']);
 
@@ -197,15 +197,21 @@ if(isset($_GET['add'])){
           <?foreach($_SESSION['items'] as $item):?>
             <?
             if(isset($adds)){
-              $added = false;
+              $added = array();
               foreach($adds as $add){
-                $added = in_add($item, $add);
+                if(in_add($item, $add)){
+                  $added[] = $item;
+                  break;
+                }
               }
             }
             ?>
-            <div style="float:left;<?=!$added ? " font-weight: bold;" : ""?>">
-              <p><input type="checkbox" name="items[]" value="<?=$item?>" id="<?=$item?>" /> <label for="<?=$item?>"><?=$item?> <br/>
-              <img src="<?=$item?>" /></label></p>
+            <div style="float:left;<?=!in_array($item, $added) ? " font-weight: bold;" : ""?>">
+              <p><input type="checkbox" name="items[]" value="<?=$item?>" id="<?=$item?>" /> <label for="<?=$item?>"><a href="<?=$item?>"><?=$item?></a> <br/>
+              <?if(!in_array($item, $added)):?>
+                <img src="<?=$item?>" />
+              <?endif?>
+              </label></p>
             </div>
           <?endforeach?>
         <?endif?>

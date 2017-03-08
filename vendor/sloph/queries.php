@@ -52,6 +52,20 @@ function construct_uris($ep, $uris){
   return $items;
 }
 
+function construct_and_sort($ep, $uris, $sort="as:published"){
+  $items = construct_uris($ep, $uris);
+  $order = array();
+  foreach($items as $uri => $data){
+    $order[$uri] = get_value(array($uri => $data), $sort);
+  }
+  arsort($order);
+  $sorted = array();
+  foreach($order as $uri => $val){
+    $sorted[$uri] = $items[$uri];
+  }
+  return $sorted;
+}
+
 /* Building queries */
 
 function get_prefixes(){
@@ -372,6 +386,7 @@ function query_for_places(){
   $q .= "CONSTRUCT { ?s ?p ?o . } WHERE {
   ?s a as:Place . ?s ?p ?o .
 }";
+var_dump(htmlentities($q));
   return $q;
 }
 
