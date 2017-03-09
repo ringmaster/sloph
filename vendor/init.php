@@ -1,23 +1,6 @@
-<?
-// TODO: There must be a less insane way to include these
-require_once("JsonLD/Exception/JsonLdException.php");
-require_once("JsonLD/Quad.php");
-require_once("JsonLD/Processor.php");
-require_once("JsonLD/FileGetContentsLoader.php");
-require_once("JsonLD/RemoteDocument.php");
-require_once("JsonLD/JsonLD.php");
-require_once("JsonLD/JsonLdSerializable.php");
-require_once("JsonLD/GraphInterface.php");
-require_once("JsonLD/IRI.php");
-require_once("JsonLD/NodeInterface.php");
-require_once("JsonLD/Node.php");
-require_once("JsonLD/Graph.php");
-require_once("JsonLD/RdfConstants.php");
-require_once("JsonLD/Value.php");
-require_once("JsonLD/TypedValue.php");
+<?php
+require_once "autoload.php";
 
-require_once("easyrdf/easyrdf/lib/EasyRdf.php");
-include_once("ARC2/ARC2.php");
 include_once("dbsettings.php");
 
 /* MySQL and endpoint configuration */ 
@@ -76,7 +59,8 @@ foreach($_PREF as $prefix => $uri){
 $_CONTEXT = json_encode($_PREF);
 
 /* ActivityStreams 2.0 handling (needs work probably) */
-require_once('easyrdf/easyrdf/lib/EasyRdf/Serialiser/ActivityStreams.php');
+//require_once('easyrdf/easyrdf/lib/EasyRdf/Serialiser/ActivityStreams.php');
+
 EasyRdf_Format::register(
     'as2',
     'ActivityStreams 2.0',
@@ -157,9 +141,7 @@ function get_subject_resources($graph){
   return $out;
 }
 
-require_once("AcceptHeader.php");
-require_once("sloph/views.php");
-require_once("sloph/queries.php");
-require_once("sloph/ldp.php");
-
-?>
+require_once 'AcceptHeader.php';
+require_once __DIR__ . '/../lib/views.php';
+require_once __DIR__ . '/../lib/queries.php';
+require_once __DIR__ . '/../lib/ldp.php';

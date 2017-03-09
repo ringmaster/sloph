@@ -1,0 +1,7 @@
+{
+    "require": {
+        "semsol/arc2": "^2.3",
+        "easyrdf/easyrdf": "^0.9.1",
+        "ml/json-ld": "^1.0"
+    }
+}
